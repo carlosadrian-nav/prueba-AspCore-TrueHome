@@ -34,5 +34,9 @@
       "publishAllPorts": true,
       "useSSL": true
     }
+  },
+  "ConnectionStrings": {
+    "TrueHome": "Host=localhost;Database=trueHome;Username=postgres;Password=carlos120594"
+
   }
 }
