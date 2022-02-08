@@ -1,4 +1,5 @@
-﻿using TrueHome.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using TrueHome.Context;
 using TrueHome.Entities;
 using TrueHome.Interfaces;
 
@@ -15,6 +16,9 @@ namespace TrueHome.Repositories
 
         public void Add(Activity entity)
         {
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.UpdateAt = DateTime.UtcNow;
+
             _context.Activities.Add(entity);
         }
 
@@ -23,24 +27,42 @@ namespace TrueHome.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Activity> GetAll(Activity entity)
+        public IQueryable<Activity> GetAll()
         {
-            throw new NotImplementedException();
+            return _context
+                        .Activities
+                        .Include(i => i.Property).IgnoreAutoIncludes();
         }
 
-        public Activity GetById(int id)
+        public async Task<Activity> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context
+                        .Activities
+                        .SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public Activity Update(Activity entity)
         {
-            throw new NotImplementedException();
+            entity.UpdateAt = DateTime.UtcNow;
+            _context.Activities.Update(entity);
+            return entity;
         }
 
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        public Activity GetByTimeAndPoperty(int property, DateTime schedule)
+        {
+            var listActivities = _context
+                                    .Activities
+                                    .Where(w => w.Property.Id == property &&
+                                            w.Schedule.AddHours(1) <= schedule &&
+                                            w.Schedule.Date == schedule.Date)
+                                    .FirstOrDefault();
+            return listActivities;
+                                    
         }
     }
 }

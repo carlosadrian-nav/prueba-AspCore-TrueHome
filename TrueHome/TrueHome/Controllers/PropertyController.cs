@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TrueHome.Context;
 using TrueHome.Entities;
+using TrueHome.Interfaces;
 using TrueHome.Services.Properties.Commands.RegisterProperties;
 
 namespace TrueHome.Controllers
@@ -9,22 +10,26 @@ namespace TrueHome.Controllers
     [Route("[controller]")]
     public class PropertyController : ControllerBase
     {
-        private readonly TrueHomeContext _context;
+        private readonly IPropertyRepository _repository;
 
-        private readonly ILogger<WeatherForecastController> _logger;
-        public PropertyController(TrueHomeContext context, ILogger<WeatherForecastController> logger)
+        public PropertyController(IPropertyRepository repository)
         {
-            _context = context; 
-            _logger = logger;
+            _repository = repository; 
         }
 
         [HttpPost]
-        public IActionResult Add(Property entity)
+        public async Task<ActionResult<int>> Add(PropertyDto entity)
         {
-            RegisterPropertiesCommand command = new RegisterPropertiesCommand(_context);
-            command.RegisterProperty(entity);
-
-            return Ok(command);
+            try
+            {
+                RegisterPropertiesCommand command = new RegisterPropertiesCommand(_repository);
+                return Ok(await command.RegisterProperty(entity));
+            }
+            catch (Exception ex)
+            {
+               return BadRequest(ex.Message);
+            }
+            
 
         }
     }

@@ -1,9 +1,12 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using TrueHome.Context;
-using TrueHome.Entities;
-using TrueHome.Services.Activities.Commands.RegisterActivities;
+using TrueHome.Interfaces;
+using TrueHome.Repositories;
+using System.Text.Json.Serialization;
+using AutoMapper;
 
 namespace TrueHome
 {
@@ -18,7 +21,11 @@ namespace TrueHome
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddControllers();
+            services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
@@ -30,8 +37,9 @@ namespace TrueHome
             );
 
             services.AddMvc().AddFluentValidation();
-
-            services.AddTransient<IValidator<Activity>, RegisterActivitiesValidator>();
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddTransient<IActivityRepository, ActivityRepository>();
+            services.AddTransient<IPropertyRepository, PropertyRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 

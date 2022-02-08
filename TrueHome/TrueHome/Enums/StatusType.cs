@@ -4,6 +4,6 @@
     {
         Active = 1,
         Canceled = 2 ,
-        Reschedule = 3  
+        Done = 3  
     }
 }

@@ -12,8 +12,8 @@ using TrueHome.Context;
 namespace TrueHome.Migrations
 {
     [DbContext(typeof(TrueHomeContext))]
-    [Migration("20220207062946_initial")]
-    partial class initial
+    [Migration("20220208014655_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,11 +35,14 @@ namespace TrueHome.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("PropertyId")
+                    b.Property<int?>("PropertyId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Schedule")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("StatudId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -56,7 +59,7 @@ namespace TrueHome.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("Activities", (string)null);
+                    b.ToTable("Activity", (string)null);
                 });
 
             modelBuilder.Entity("TrueHome.Entities.Property", b =>
@@ -78,6 +81,9 @@ namespace TrueHome.Migrations
 
                     b.Property<DateTime>("DisabledAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("StatudId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Status")
                         .HasColumnType("text");
@@ -123,10 +129,8 @@ namespace TrueHome.Migrations
             modelBuilder.Entity("TrueHome.Entities.Activity", b =>
                 {
                     b.HasOne("TrueHome.Entities.Property", "Property")
-                        .WithMany("activities")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Activities")
+                        .HasForeignKey("PropertyId");
 
                     b.Navigation("Property");
                 });
@@ -144,7 +148,7 @@ namespace TrueHome.Migrations
 
             modelBuilder.Entity("TrueHome.Entities.Property", b =>
                 {
-                    b.Navigation("activities");
+                    b.Navigation("Activities");
                 });
 #pragma warning restore 612, 618
         }

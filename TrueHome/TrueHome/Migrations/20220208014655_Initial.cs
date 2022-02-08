@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace TrueHome.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,6 +21,7 @@ namespace TrueHome.Migrations
                     Description = table.Column<string>(type: "text", nullable: true),
                     DisabledAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: true),
+                    StatudId = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -30,27 +31,27 @@ namespace TrueHome.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Activities",
+                name: "Activity",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Schedule = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
-                    PropertyId = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
+                    StatudId = table.Column<int>(type: "integer", nullable: false),
+                    PropertyId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Activities", x => x.Id);
+                    table.PrimaryKey("PK_Activity", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Activities_Properties_PropertyId",
+                        name: "FK_Activity_Properties_PropertyId",
                         column: x => x.PropertyId,
                         principalTable: "Properties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -68,16 +69,16 @@ namespace TrueHome.Migrations
                 {
                     table.PrimaryKey("PK_Surveys", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Surveys_Activities_ActivityId",
+                        name: "FK_Surveys_Activity_ActivityId",
                         column: x => x.ActivityId,
-                        principalTable: "Activities",
+                        principalTable: "Activity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Activities_PropertyId",
-                table: "Activities",
+                name: "IX_Activity_PropertyId",
+                table: "Activity",
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(
@@ -92,7 +93,7 @@ namespace TrueHome.Migrations
                 name: "Surveys");
 
             migrationBuilder.DropTable(
-                name: "Activities");
+                name: "Activity");
 
             migrationBuilder.DropTable(
                 name: "Properties");

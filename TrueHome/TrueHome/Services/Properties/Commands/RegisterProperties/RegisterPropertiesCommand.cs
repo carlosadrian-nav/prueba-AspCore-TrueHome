@@ -1,27 +1,42 @@
 ﻿using TrueHome.Context;
 using TrueHome.Entities;
+using TrueHome.Interfaces;
 using TrueHome.Repositories;
 
 namespace TrueHome.Services.Properties.Commands.RegisterProperties
 {
     public class RegisterPropertiesCommand
     {
-        private readonly TrueHomeContext _context;
+        private readonly IPropertyRepository _repository;
 
-        public RegisterPropertiesCommand(TrueHomeContext context)
+        public RegisterPropertiesCommand(IPropertyRepository repository)
         {
-            this._context = context;
+            this._repository = repository;
         }
 
-        public void RegisterProperty(Property entity)
+        public async Task<int> RegisterProperty(PropertyDto entity)
         {
+            try
+            {
+                var propertyEntity = await Task.FromResult(new Property(
+                                        entity.Title,
+                                        entity.Address,
+                                        entity.Description,
+                                        null,
+                                        entity.StatudId.ToString(),
+                                        entity.StatudId));
 
-            PropertyRepository repo = new(_context);
 
-            repo.Add(entity);   
-            repo.SaveChanges();
+                _repository.Add(propertyEntity);
+                _repository.SaveChanges();
 
-            return; 
+                return propertyEntity.Id;
+            }
+            catch (Exception ex)
+            { 
+                throw new Exception(ex.Message);
+            }
+            
         }
     }
 }

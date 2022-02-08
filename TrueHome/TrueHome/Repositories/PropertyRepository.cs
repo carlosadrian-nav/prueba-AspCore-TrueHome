@@ -1,4 +1,5 @@
-﻿using TrueHome.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using TrueHome.Context;
 using TrueHome.Entities;
 using TrueHome.Interfaces;
 
@@ -13,6 +14,9 @@ namespace TrueHome.Repositories
         }
         public void Add(Property entity)
         {
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.UpdateAt = DateTime.UtcNow;
+
             _context.Properties.Add(entity);
         }
 
@@ -21,14 +25,17 @@ namespace TrueHome.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Property> GetAll(Property entity)
+        public IQueryable<Property> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Property GetById(int id)
+        public async Task<Property> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context
+                    .Properties
+                    .Where(w => w.Id == id)
+                    .FirstOrDefaultAsync();
         }
 
         public void SaveChanges()

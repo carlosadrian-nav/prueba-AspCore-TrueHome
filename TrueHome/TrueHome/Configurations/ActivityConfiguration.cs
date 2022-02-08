@@ -8,8 +8,8 @@ namespace TrueHome.Configurations
     {
         public void Configure(EntityTypeBuilder<Activity> builder)
         {
-            builder.ToTable("Activities");
-            builder.HasKey(x => x.Id);  
+            builder.ToTable("Activity");
+            builder.HasKey(x => x.Id);
 
             builder.Property(p => p.Status)
                 .IsRequired();
@@ -19,6 +19,9 @@ namespace TrueHome.Configurations
 
             builder.Property(p => p.Status)
                 .IsRequired();
+
+            builder.HasOne(t => t.Property)
+                .WithMany();
 
         }
     }
