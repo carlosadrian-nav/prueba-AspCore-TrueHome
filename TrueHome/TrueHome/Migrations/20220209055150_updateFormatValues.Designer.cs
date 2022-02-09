@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TrueHome.Context;
@@ -11,9 +12,10 @@ using TrueHome.Context;
 namespace TrueHome.Migrations
 {
     [DbContext(typeof(TrueHomeContext))]
-    partial class TrueHomeContextModelSnapshot : ModelSnapshot
+    [Migration("20220209055150_updateFormatValues")]
+    partial class updateFormatValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,7 +126,7 @@ namespace TrueHome.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("Surveys", (string)null);
+                    b.ToTable("Surveys");
                 });
 
             modelBuilder.Entity("TrueHome.Entities.Activity", b =>

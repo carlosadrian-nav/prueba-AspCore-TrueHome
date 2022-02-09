@@ -4,11 +4,11 @@ using TrueHome.Entities;
 
 namespace TrueHome.Configurations
 {
-    public class ActivityConfiguration : IEntityTypeConfiguration<Activity>
+    public class PropertyConfiguration : IEntityTypeConfiguration<Property>
     {
-        public void Configure(EntityTypeBuilder<Activity> builder)
+        public void Configure(EntityTypeBuilder<Property> builder)
         {
-            _ = builder.ToTable("Activity");
+            _ = builder.ToTable("Property");
             _ = builder.HasKey(x => x.Id);
 
             _ = builder.Property(p => p.Status)
@@ -16,13 +16,16 @@ namespace TrueHome.Configurations
                 .IsRequired();
 
             _ = builder.Property(p => p.Title)
+                .HasColumnType("VARCHAR(255)")
+                .IsRequired();
+
+            _ = builder.Property(p => p.Description)
+                .HasColumnType("text")
                 .IsRequired();
 
             _ = builder.Property(p => p.StatudId)
                 .IsRequired();
 
-            _ = builder.HasOne(t => t.Property)
-                .WithMany();
 
         }
     }

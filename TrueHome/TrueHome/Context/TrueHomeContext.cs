@@ -17,6 +17,7 @@ namespace TrueHome.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new ActivityConfiguration().Configure(modelBuilder.Entity<Activity>());
+            new PropertyConfiguration().Configure(modelBuilder.Entity<Property>());
         }
     }
 }
